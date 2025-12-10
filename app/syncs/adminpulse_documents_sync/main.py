@@ -6,6 +6,6 @@ class AdminpulseDocumentsSync:
 
 
     async def main(self):
-        documents = await self._adminpulse_controller.get_documents()
+        documents = await self._adminpulse_controller.get_email_documents()
 
         pass
