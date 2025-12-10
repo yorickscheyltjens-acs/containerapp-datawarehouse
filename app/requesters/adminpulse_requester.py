@@ -35,7 +35,7 @@ class AdminpulseRequester:
         return None, None
         
 
-    async def _get_all(self, url: str, parameters: dict={}) -> list[dict]:
+    async def get_all(self, url: str, parameters: dict={}) -> list[dict]:
         default_parameters = {
             'pageSize': '400'
         }

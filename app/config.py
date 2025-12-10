@@ -3,19 +3,34 @@ import os
 from abc import ABC
 
 class Config(ABC):
-    all_keys: list[str] = [
-        'SYNC',
-        'ADMINPULSE_API_KEY'
+    required_general_env_vars: list[str] = [
+        'SYNC'
     ]
 
     all_env_vars: dict[str, str | None] = os.environ
 
+
+    # General
     SYNC = all_env_vars.get('SYNC')
+
+
+    # Adminpulse Document Sync
     ADMINPULSE_API_KEY = all_env_vars.get('ADMINPULSE_API_KEY')
+    DAYS_IN_PAST = all_env_vars.get('DAYS_IN_PAST')
 
 
     @classmethod
-    def check_environment_variables(cls) -> None:
-        missing_vars = [key for key in cls.all_keys if not cls.all_env_vars.get(key)]
+    def check_general_environment_variables(cls) -> None:
+        missing_vars = [key for key in cls.required_general_env_vars if not cls.all_env_vars.get(key)]
         if missing_vars:
             raise Exception(f'Missing environment variables: {", ".join(missing_vars)}')
+        
+    
+    @classmethod
+    def check_detail_environment_variables(cls, required_detail_env_vars: list[str]) -> None:
+        missing_vars = [key for key in required_detail_env_vars if not cls.all_env_vars.get(key)]
+        if missing_vars:
+            raise Exception(f'Missing environment variables: {", ".join(missing_vars)}')
+        
+    
+

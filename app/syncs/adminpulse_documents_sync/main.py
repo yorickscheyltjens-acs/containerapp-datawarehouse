@@ -1,6 +1,11 @@
 from .controllers import AdminpulseController
 
 class AdminpulseDocumentsSync:
+    REQUIRED_ENV_VARS = [
+        'ADMINPULSE_API_KEY',
+        'DAYS_IN_PAST'
+    ]
+
     def __init__(self):
         self._adminpulse_controller = AdminpulseController()
 

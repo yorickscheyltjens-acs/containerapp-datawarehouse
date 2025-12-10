@@ -14,13 +14,15 @@ SYNC_MAPPINGS = {
 
 
 async def main():
-    Config.check_environment_variables()
+    Config.check_general_environment_variables()
 
     sync = Config.SYNC
     if sync not in SYNC_MAPPINGS:
         raise Exception(f'Invalid SYNC value: {sync}')
     
     sync_instance = SYNC_MAPPINGS[sync]()
+    Config.check_detail_environment_variables(sync_instance.REQUIRED_ENV_VARS)
+
     await sync_instance.main()
 
     pass
