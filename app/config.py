@@ -4,12 +4,14 @@ from abc import ABC
 
 class Config(ABC):
     all_keys: list[str] = [
-        'SYNC'
+        'SYNC',
+        'ADMINPULSE_API_KEY'
     ]
 
     all_env_vars: dict[str, str | None] = os.environ
 
     SYNC = all_env_vars.get('SYNC')
+    ADMINPULSE_API_KEY = all_env_vars.get('ADMINPULSE_API_KEY')
 
 
     @classmethod
