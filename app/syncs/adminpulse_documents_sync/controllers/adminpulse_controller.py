@@ -1,8 +1,10 @@
 from datetime import date, timedelta
+import os
 
 from requesters import AdminpulseRequester
 from config import Config
 from ..models import EmailDocumentModel, EmailAttachmentModel
+import json
 
 class AdminpulseController:
     def __init__(self) -> None:
@@ -16,6 +18,9 @@ class AdminpulseController:
         parameters = {
             'LastSyncTime': (date.today() - timedelta(days=int(self._days_in_past))).strftime('%d%m%Y')
         }
+       
         documents = await self._requester.get_all(url=url, parameters=parameters)
+        
+        models = [EmailDocumentModel(item, 'adminpulse') for item in documents]
 
-        return [EmailDocumentModel(item) for item in documents]
+        return [model for model in models if model.relation_identifier is not None]

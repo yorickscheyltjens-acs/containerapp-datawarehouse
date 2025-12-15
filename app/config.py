@@ -4,7 +4,8 @@ from abc import ABC
 
 class Config(ABC):
     required_general_env_vars: list[str] = [
-        'SYNC'
+        'SYNC',
+        'MI_CLIENT_ID'
     ]
 
     all_env_vars: dict[str, str | None] = os.environ
@@ -12,6 +13,7 @@ class Config(ABC):
 
     # General
     SYNC = all_env_vars.get('SYNC')
+    MI_CLIENT_ID = all_env_vars.get('MI_CLIENT_ID')
 
 
     # Adminpulse Document Sync
