@@ -22,3 +22,6 @@ class EmailDocumentModel:
         self.attachments = [EmailAttachmentModel(attachment) for attachment in attachments]
 
         self.software = software
+
+        self.drive_id = None
+        self.site_id = None

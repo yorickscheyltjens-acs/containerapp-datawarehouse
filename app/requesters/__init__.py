@@ -1,2 +1,3 @@
 from .adminpulse_requester import AdminpulseRequester
 from .sql_database_requester import SqlDatabaseRequester
+from .microsoft_requester import MicrosoftRequester

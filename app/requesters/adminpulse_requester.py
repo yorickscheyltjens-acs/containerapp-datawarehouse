@@ -11,7 +11,7 @@ class AdminpulseRequester:
         self._api_key = Config.ADMINPULSE_API_KEY
 
 
-    async def _send_request(self, method: str, url: str, parameters: dict = {}) -> dict:
+    async def send_request(self, method: str, url: str, parameters: dict = {}) -> dict:
         url = f'https://api.adminpulse.be/{url}'
 
         headers = {
@@ -42,7 +42,7 @@ class AdminpulseRequester:
         parameters = {**default_parameters, **parameters}
 
         data = []
-        status_code, json_response = await self._send_request(method='GET', url=url, parameters=parameters)
+        status_code, json_response = await self.send_request(method='GET', url=url, parameters=parameters)
         if status_code != 200:
             raise Exception(f'Error: {status_code}')
         
@@ -51,11 +51,11 @@ class AdminpulseRequester:
 
         data.extend(json_response['results'])
 
-        return data
+        return data # DEBUG
         page_count = json_response['pageCount']
 
         with concurrent.futures.ThreadPoolExecutor(max_workers=5) as executor:
-            futures = {executor.submit(self._send_request, 'GET', url, {**{'page': x}, **parameters}): x for x in range(1, page_count+1)}
+            futures = {executor.submit(self.send_request, 'GET', url, {**{'page': x}, **parameters}): x for x in range(1, page_count+1)}
             concurrent.futures.wait(futures)
 
             for future in concurrent.futures.as_completed(futures):

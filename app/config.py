@@ -19,6 +19,10 @@ class Config(ABC):
     # Adminpulse Document Sync
     ADMINPULSE_API_KEY = all_env_vars.get('ADMINPULSE_API_KEY')
     DAYS_IN_PAST = all_env_vars.get('DAYS_IN_PAST')
+    MICROSOFT_TENANT_ID = all_env_vars.get('MICROSOFT_TENANT_ID')
+    MICROSOFT_CLIENT_ID = all_env_vars.get('MICROSOFT_CLIENT_ID')
+    MICROSOFT_CLIENT_SECRET = all_env_vars.get('MICROSOFT_CLIENT_SECRET')
+
 
 
     @classmethod
