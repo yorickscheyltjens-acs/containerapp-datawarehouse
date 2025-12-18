@@ -23,5 +23,6 @@ class EmailDocumentModel:
 
         self.software = software
 
-        self.drive_id = None
-        self.site_id = None
+        self.has_existing_drive = None
+        self.sharepoint_drive = None
+        self.sharepoint_site = None

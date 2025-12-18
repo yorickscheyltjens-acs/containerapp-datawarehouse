@@ -17,11 +17,12 @@ class AdminpulseDocumentsSync:
     def _update_models(self, inserted_documents, models: list[EmailDocumentModel]) -> list[EmailDocumentModel]:
         filtered_models = []
         for model in models:
-            matching_document = next((doc for doc in inserted_documents if doc[0] == model.document_id), None)
-            if not matching_document:
+            matching_doument = next((doc for doc in inserted_documents if doc[0] == model.document_id), None)
+            if not matching_doument:
                 continue
 
-            model.drive_id = matching_document[3]
+            model.has_existing_drive = matching_doument[3] is not None
+
             filtered_models.append(model)
 
         return filtered_models
@@ -30,19 +31,16 @@ class AdminpulseDocumentsSync:
 
     async def _get_missing_sharepoint_data(self, models: list[EmailDocumentModel]):
         for model in models:
-            drive_id = model.drive_id
-            if drive_id:
+            if model.has_existing_drive:
                 continue
 
             relation_code = await self._adminpulse_controller.get_relation_code(model)
             if not relation_code:
                 raise Exception(f'No relation code found for document id {model.document_id} with relation identifier {model.relation_identifier}')
 
-            site_id = await self._sharepoint_controller.get_site_id(relation_code)
-            model.site_id = site_id
-
-            drive_id = await self._sharepoint_controller.get_drive_id(site_id)
-            model.drive_id = drive_id
+            model.sharepoint_site = await self._sharepoint_controller.get_site(relation_code)
+            site_id = model.sharepoint_site['id']
+            model.sharepoint_drive = await self._sharepoint_controller.get_drive(site_id)
 
         return models  
 
@@ -64,6 +62,9 @@ class AdminpulseDocumentsSync:
         document_models = await self._get_missing_sharepoint_data(models=document_models)
 
         # 4. Nieuwe sites en drives toevoegen in database
+        await self._database_controller.insert_sites(models=document_models)
+        await self._database_controller.insert_drives(models=document_models)
+        await self._database_controller.update_documents(models=document_models)
         pass
 
       

@@ -7,7 +7,7 @@ class SharepointController:
         self._requester = MicrosoftRequester()
 
 
-    async def get_site_id(self, code: str) -> str | None:
+    async def get_site(self, code: str) -> str | None:
         status_code, response_json = await self._requester.get_request(
             url='sites',
             params={
@@ -21,10 +21,10 @@ class SharepointController:
         if 'value' not in response_json or len(response_json['value']) == 0:
             raise Exception(f'No site found for relation code: {code}')
         
-        return response_json['value'][0]['id']
+        return response_json['value'][0]
 
 
-    async def get_drive_id(self, site_id: str) -> str | None:
+    async def get_drive(self, site_id: str) -> str | None:
         status_code, response_json = await self._requester.get_request(
             url=f'sites/{site_id}/drives'
         )
@@ -38,4 +38,4 @@ class SharepointController:
         if not communication_drives:
             raise Exception(f'No Communication drive found for site id: {site_id} and relation code: {code}')
         
-        return communication_drives[0]['id']
+        return communication_drives[0]
